@@ -233,7 +233,7 @@ $$CAR_i^{(w)} = \gamma_0 + \gamma_1 AI\_Index_i + \gamma_2 Size_i + \gamma_3 Vol
 
 [2] 吴非, 胡慧芷, 林慧妍, 等. 企业数字化转型与资本市场表现——来自股票流动性的经验证据[J]. 管理世界, 2021, 37(7): 130-144.
 
-[3] LI X, DIEP T, LI Y. …[Energies, 2026, 19(22): 5413. 73 词 AI 词典，附录 Table A2——条目细节以核验表为准]
+[3] LI J, DIEP H T, LI Y. Artificial intelligence and resilience efficiency in China's new energy industry: evidence from production, storage, and application segments[J]. Energies, 2026, 19(22): 5413.
 
 [4] TABOGA M. DeepSeek and the repricing of AI assets[R]. arXiv:2610.30886, 2026.
 
@@ -257,9 +257,9 @@ $$CAR_i^{(w)} = \gamma_0 + \gamma_1 AI\_Index_i + \gamma_2 Size_i + \gamma_3 Vol
 
 [14] ACEMOGLU D. The simple macroeconomics of AI[J]. Economic Policy, 2025, 40(121): 13-58.
 
-[15] 张叶青, 陆瑶, 李乐芸, 等. 大数据应用、construct与企业创新——来自我国上市公司的经验证据[J]. 经济研究, 2021, 56(12): 19-45.（条目细节以核验表为准）
+[15] 张叶青, 陆瑶, 李乐芸. 大数据应用对中国企业市场价值的影响——来自中国上市公司年报文本分析的证据[J]. 经济研究, 2021(12): 42-59.
 
-> 注：[3][15] 等以"以核验表为准"标注的条目，其作者缩写/卷期页码在终稿前由 `references/citation_verification.md` 的终检结果回填（孔佳怡人工终检项）。**本文不引用任何未核验文献。**
+> 注：全部 30 条的逐条核验状态见 `references/citation_verification.md`（含 DOI 与核验时间），核验表中仅 5 处小字段（作者缩写/卷期/页码）列为人机分工中孔佳怡的终检项。**本文不引用任何未核验文献。**
 
 ---
 
