@@ -1,36 +1,53 @@
 # 代码仓库 README
 
-> 交付物 #2 的入口。研究题目：大语言模型度量的企业人工智能采纳与股票回报——来自DeepSeek冲击的事件研究证据
+> 交付物 #2 入口。题目：**大语言模型度量的企业AI采纳与股票回报——来自DeepSeek冲击的事件研究**
+> 队伍：张锦悦、孔佳怡（山东财经大学）｜赛道四（经济金融与社会科学智能分析）
+> 全部数据来自公开接口，全部结果由脚本从原始数据生成，无手工改数。
 
-## 这是什么
+## 研究一句话
 
-用 LLM 从 A 股上市公司 2023 年报 MD&A 中度量企业真实 AI 采纳强度，以 DeepSeek-R1 发布（2025-01-20）为外生技术冲击，检验高/低 AI 采纳组的累计超额收益（CAR）差异，并与词典法、AI 概念股名单两种 baseline 度量对比。
+用 LLM（GLM-4-Flash）逐段判读 A 股 2023 年报 MD&A 中的"真实 AI 应用 / 战略口号 / 无关"三分类，构建企业 AI 采纳指数；以 DeepSeek-R1 发布（2025-01-20）为外生冲击做事件研究，检验高/低 AI 采纳组的 CAR 差异；词典法（73 词 AI 词典）为基线度量，ChatGPT 发布（2022-11-30）为安慰剂事件。
 
-## 快速开始
+## 代码结构（编号即执行顺序）
 
-见 `../reproducibility/REPRODUCE.md`（一键复现流程、环境、随机种子、API 费用预估）。
+| 脚本 | 功能 | 输入 | 主要输出 |
+|------|------|------|----------|
+| `data_client.py` | 公开数据薄客户端：巨潮年报查询/下载、腾讯日K（前复权，主通道）、新浪K线（兜底）、东财（兜底）；指数退避 + 限速 + 双通道容灾 | — | 供各脚本 import |
+| `01_fetch_stock_list.py` | 获取沪深 A 股清单 | 东财接口 | `data/processed/stock_list.csv`（5,565 只） |
+| `02_download_reports.py` | 定位并下载 2023 年报 PDF（巨潮主/东财备双通道，断点续跑，`--sample all/100`） | stock_list | `data/raw/annual_reports/` + `report_index.csv` |
+| `03_extract_mda.py` | pypdf 提取 MD&A 章节 + 含 AI 关键词段落表（段落 ID 稳定，支持增量） | 年报 PDF | `data/processed/mda_text/` + `mda_paragraphs.csv` |
+| `04_llm_scoring.py` | GLM-4-Flash 逐段三分类判读（temperature=0，few-shot 锚定，断点续跑按 `llm_raw/{para_id}.json` 缓存），聚合公司级 `ai_index = 0.5×应用密度 + 0.3×场景广度 + 0.2×投入` | mda_paragraphs | `ai_adoption_llm.csv` + `ai_adoption_firm.csv` + `llm_raw/`（原始响应审计存档） |
+| `04_dict_baseline.py` | 词典法基线（73 词 AI 词典 v1），输出与 LLM 法的 Spearman/分歧对比 | mda_text | `ai_adoption_dict.csv` + `results/dict_vs_llm_correlation.txt` |
+| `05_fetch_prices.py` | 事件窗口行情：DeepSeek 主窗（2025.1）+ ChatGPT 安慰剂窗（2022.11）；`--codes-from firm/sample` | stock_list / firm 表 | `data/prices/deepseek/`、`data/prices/placebo/` + 指数 |
+| `06_car_analysis.py` | 市场模型（估计窗 OLS）+ CAR 组间 t 检验 + 指数回归；主检验与安慰剂并跑 | prices + firm 表 | `results/car_panel_deepseek.csv`、`table_*_groups/regression.csv` |
+| `07_cross_section.py` | 横截面回归（控制规模/波动/动量；成交额以成交量×收盘价合成，见代码注释） | CAR 面板 | `results/table4_cross_section.csv` |
+| `09_make_figures.py` | 全部论文图表（统一橙蓝配色 300dpi，见 `figstyle.py`） | results CSV | `results/figures/fig1–fig4` |
+| `figstyle.py` | 图表样式统一（橙蓝双主色、中文字体栈、白底） | — | — |
+| `prompts/llm_scoring_prompt_v1.md` | LLM 判读系统提示词 v1 存档（判读标准的正式版本） | — | — |
 
-## 代码结构（按执行顺序编号）
+## 与论文的对应关系
 
-| 脚本 | 功能 | 输入 | 输出 |
-|------|------|------|------|
-| 01_download_reports.py | 下载年报 | 巨潮 | data/raw/annual_reports/ |
-| 02_extract_mda.py | 抽取 MD&A 段落 | 年报 PDF | data/processed/mda.parquet |
-| 03_llm_scoring.py | LLM 逐段 AI 采纳判读 | MD&A | data/processed/ai_adoption_llm.csv |
-| 04_dict_baseline.py | 73词词典法 baseline | MD&A | data/processed/ai_adoption_dict.csv |
-| 05_fetch_prices.py | 事件窗口行情 | AKShare | data/prices/ |
-| 06_car_analysis.py | 市场模型+CAR 主结果 | 价格+分组 | results/table1-3 |
-| 07_cross_section.py | 横截面回归 | CAR+特征 | results/table4 |
-| 08_placebo_chatgpt.py | ChatGPT 安慰剂 | 同上 | results/table5 |
-| 09_make_figures.py | 全部图表 | 上述 | results/figures/ |
+| 论文位置 | 产物文件 | 生成脚本 |
+|---|---|---|
+| 表1 度量对比 | `results/dict_vs_llm_correlation.txt`、`ai_adoption_dict.csv` | 04_dict_baseline |
+| 表2/表3 主结果 | `results/table_deepseek_groups.csv`、`table_deepseek_regression.csv` | 06_car_analysis |
+| 表4 横截面 | `results/table4_cross_section.csv` | 07_cross_section |
+| 表5 安慰剂 | `results/table_placebo_groups.csv`、`table_placebo_regression.csv` | 06_car_analysis |
+| 图1–图4 | `results/figures/*.png` | 09_make_figures |
+| 度量审计 | `data/processed/llm_raw/*.json`（每个判读的原始模型响应 + 证据摘录） | 04_llm_scoring |
 
-## 与论文的对应
+## 环境与依赖
 
-- Table 1 → `06_car_analysis.py`
-- Figure 1（分组 CAR 走势）→ `09_make_figures.py`
-- （提交前补全对应关系表）
+- Python 3.13（3.10+ 均可）；第三方依赖：`pandas numpy statsmodels pypdf requests matplotlib openpyxl`（无 jieba/akshare 等重依赖）
+- LLM：智谱 GLM-4-Flash（免费额度）。API Key 放在 `research-package/.env`：`GLM_API_KEY=...`（**已 gitignore，不入库**）
+- 联网需求：巨潮/东财/腾讯/新浪公开接口（均为无需鉴权的公开行情与公告数据）
 
-## 复现注意
+## 一键复现
 
-- git 提交策略：每个实验阶段完成后 commit 一次（时间戳即过程证据），禁止最后一次性打包。
-- `data/raw/` 只进不改；所有加工产物由脚本生成，不手改数据文件。
+见 `../reproducibility/REPRODUCE.md`（含环境安装、执行顺序、随机种子、成本与限流应对、已知实现细节的诚实披露）。
+
+## 复现红线
+
+- `data/raw/` 只进不改；所有加工产物由脚本生成。
+- 每个实验阶段完成即 git commit（时间戳即过程证据），禁止最后一晚一次性打包。
+- 论文每个数字都能在 `results/*.csv` 中找到对应来源；图表数值一律由 CSV 生成，AI 不手填数字。

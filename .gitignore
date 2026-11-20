@@ -1,7 +1,4 @@
-data/raw/annual_reports/
-data/raw/prices/
-data/raw/fundamentals/
-data/processed/llm_raw/
+data/
 __pycache__/
 *.pyc
 .DS_Store
