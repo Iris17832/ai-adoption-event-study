@@ -66,3 +66,7 @@
 
 ## 日志覆盖度说明（2026-11-21 补记）
 本日志按会话日记录 Agent（WorkBuddy Research Brain + GLM-4-Flash）的实际使用情况。经核对：2026-11-16（报名/备案筹备）、2026-11-18（当日无会话，无产出）无条目；11-17、11-19、11-20、11-21 为活跃工作日，均逐条留痕。不做回溯性虚构补记。
+- 2026-11-21 22:45 | WorkBuddy | GitHub 上线：SSH 认证自报账号 Iris17832（用户所述"用户名"实为仓库名），远程 git@github.com:Iris17832/ai-adoption-event-study.git 推送成功，本地与远程同步；推送前安全处置：①终审下载的第三方论文全文 PDF(7.1MB) 被 16_md_to_pdf 前序排查发现已随 b5dd824 入库 → git rm --cached + .gitignore + amend，历史与工作树双双排除（本地保留供核验）②确认 .env 未被跟踪 ③git gc 清理 9.4M 悬挂对象
+- 2026-11-21 22:28 | WorkBuddy | 论文转 PDF 交付件：新增 16_md_to_pdf.py（自建轻量 md→html，含 LaTeX 公式简化渲染/表格/引用块/列表/内部元信息剥离），Chrome 无头 --print-to-pdf + CSS @page margin box 页码（实测两方案后选定，无 file:// URL 泄漏）| 产物：paper/manuscript.pdf 18 页/5 图随文 base64 内嵌/7 表/30 条文献/页眉 running head+页码/橙蓝配色；修复封面溢出产生的空白第 2 页；PDFKit 渲染 9 页视觉抽查全过
+- 2026-11-21 22:30 | WorkBuddy | 学术诚信修正：论文 5.4 节第 6 条残留"人工校验 19/20"与终审实测(18/20 AI 跨模型)矛盾 → 修正为"校验覆盖有限且非人工"并注明不将 AI 复核表述为人工判读
+- 2026-11-21 22:41 | WorkBuddy | 新增 17_package_check.py 提交前全包自检（8 项交付物存在性+数字一致性+安全检查 40 余项）：首轮 2 项未过均系脚本统计口径（词表含元信息头、日志无 11-18 条目），修正后全过；agent_log 补"日志覆盖度说明"（11-18 无会话，不虚构补记）| 产物：results/final_package_check.md ✅ + team/checkpoint_day5.md（官网检查点提交稿，含 GitHub URL）+ submission_package_v03.zip（26MB/97 文件，排除 raw/prices/llm_raw/mda_text/.git/pdfs）
