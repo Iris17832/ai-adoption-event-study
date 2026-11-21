@@ -10,11 +10,11 @@
 
 | # | 交付物 | 所在目录/文件 | 负责人 | 状态 | 截止节点 |
 |---|--------|--------------|--------|------|----------|
-| 1 | 论文原型（PDF） | `paper/manuscript.md` v0.2 → 终稿导出 PDF | 论文主笔（人） | 🟡 **v0.2 完成（2026-11-21 18:00，N=901 全数字实测 + 30 条参考文献）**；最终样本接力链跑完后更新数字 → 转 PDF | 11.21 v0.2 → 11.22 定稿 |
+| 1 | 论文原型（PDF） | `paper/manuscript.md` v0.3 → 终稿导出 PDF | 论文主笔（人） | 🟡 **v0.3 完成（2026-11-21 19:50，最终样本 N=2,082 / 27,821 段 100% 覆盖，全数字实测 + 30 条参考文献）**；待转 PDF | 11.22 定稿导出 |
 | 2 | 代码仓库及 README | `code/`（README + requirements.txt + 13 个脚本，含 13 诊断/14 数字快照） | 代码负责人（人+Agent） | ✅ 终版（11-21） | 11.20 晚起同步提交 ✅ |
 | 3 | 数据来源与许可说明 | `data/data_sources_and_licenses.md` | 数据负责人 | ✅ 终版（按实际数据源登记，11-21） | 11.21 ✅ |
 | 4 | 实验结果及核心图表 | `results/`（表1–表7 + fig1–fig4 共 5 图 + diagnostics_report + final_numbers.md） | 实验负责人 | ✅ **扩容样本 N=901 主结果/稳健性/诊断全部完成（11-21）**；最终全样本接力链后台运行中 | 11.21 ✅ → 11.22 最终样本更新 |
-| 5 | 文献来源与引用核验表 | `references/citation_verification.md`（30 条）+ `paper/references.md` + **`references/citation_human_checklist.md/.xlsx`（人工逐条核实清单）** | 文献核验员 | 🟡 30 条已 AI 登记 DOI；**人工逐条核实进行中**（张锦悦，P0 5 条优先）；[7][30] 待终检，正文未实质引用 | 11.22 终检 |
+| 5 | 文献来源与引用核验表 | `references/citation_verification.md`（30 条）+ `paper/references.md` + **`references/citation_human_checklist.md/.xlsx`（人工逐条核实清单）** | 文献核验员 | 🟡 **人工核实进行中（张锦悦）：[14][16][26][29][30] 五条已完成（11-21）**；[30] 更正为真实论文（LI Junze, IREF 105:104832）并写入正文 2.1；[26] 核验表 DOI 错误已修正（→10.1257/mac.20180386）；剩 [7] 卷期定位与 A3 词表抄录 | 11.22 终检 |
 | 6 | Agent 使用日志 | `agent_log/agent_usage_log.md` | 全员+Research Brain | 🟡 持续追加中 | 持续追加，11.22 导出 |
 | 7 | 可复现说明 | `reproducibility/REPRODUCE.md` | 代码负责人 | ✅ 终版（11-21，与实际脚本一一对应） | 11.22 ✅ |
 | 8 | 人机分工声明 | `team/human_ai_division.md` | 队长 | 🟡 内容定稿，待孔佳怡三项终审后签字 | 11.22（随分工确定终版） |

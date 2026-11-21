@@ -70,6 +70,7 @@ def run():
             hi, lo = s[s[measure] >= thr][w], s[s[measure] < thr][w]
             t, p = ttest(hi, lo)
             out.append({"robustness": label, "measure": measure, "window": w,
+                        "split": f"P{int(q*100)}",
                         "high_mean": hi.mean(), "low_mean": lo.mean(),
                         "diff": hi.mean() - lo.mean(), "t": t, "p": p, "n_hi": len(hi), "n_lo": len(lo)})
     # 替代度量（中位数分组；binary 用 1/0）
@@ -79,11 +80,19 @@ def run():
             s = df[[measure, w]].dropna()
             if measure == "ai_binary":
                 hi, lo = s[s[measure] == 1][w], s[s[measure] == 0][w]
+                split = "1 / 0"
             else:
                 thr = s[measure].median()
                 hi, lo = s[s[measure] >= thr][w], s[s[measure] < thr][w]
+                split = "median"
+                # 零膨胀度量（如 ai_density 中位数为 0）会使低组为空 → t 检验 NaN。
+                # 回退到「>0 vs =0」分组，保证两组非空，并如实记录分组方式。
+                if len(lo) < 30 or len(hi) < 30:
+                    hi, lo = s[s[measure] > 0][w], s[s[measure] == 0][w]
+                    split = ">0 / =0 (中位数退化回退)"
             t, p = ttest(hi, lo)
             out.append({"robustness": label, "measure": measure, "window": w,
+                        "split": split,
                         "high_mean": hi.mean(), "low_mean": lo.mean(),
                         "diff": hi.mean() - lo.mean(), "t": t, "p": p, "n_hi": len(hi), "n_lo": len(lo)})
     res = pd.DataFrame(out)

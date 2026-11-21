@@ -116,12 +116,20 @@ if t7 is not None:
     lines.append("| 检验 | 事件 | 窗口 | 样本 | 差异/系数 | p |")
     lines.append("|---|---|---|---|---|---|")
     for _, r in t7.iterrows():
-        val = r.get("diff", r.get("coef_ai", float("nan")))
+        # 表7 有两种行：组间检验用 diff/p；控制回归用 coef_ai/p_ai。
+        # pandas 的 Series.get(k, default) 在「列存在但值为 NaN」时不会回退，
+        # 必须显式判空，否则 D2/D4 行会输出 nan。
+        val = r.get("diff")
+        if pd.isna(val):
+            val = r.get("coef_ai")
+        pval = r.get("p")
+        if pd.isna(pval):
+            pval = r.get("p_ai")
         try:
             vs = pp(val) if r.test.startswith("D1") or r.test.startswith("D3") else f"{float(val):+.4f}"
         except Exception:
             vs = "-"
-        lines.append(f"| {r.test} | {r.event} | {r.get('window','')} | {r.get('sample','')} | {vs} | {fmt_p(r.get('p', r.get('p_ai', float('nan'))))} |")
+        lines.append(f"| {r.test} | {r.event} | {r.get('window','')} | {r.get('sample','')} | {vs} | {fmt_p(pval)} |")
 lines.append("")
 
 out = "\n".join(lines)

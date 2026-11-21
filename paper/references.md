@@ -50,7 +50,7 @@
 
 ## 六、AI 与企业披露质量（稳健性/相关文献）
 
-[30] （作者待补）. Corporate AI adoption and disclosure quality: evidence from MD&A readability and accuracy, 2010–2023[J]. International Review of Economics & Finance, 2026, 105: 104832.
+[30] LI J. Artificial intelligence innovation and financial report quality[J]. International Review of Economics & Finance, 2026, 105: 104832.
 
 ---
 
