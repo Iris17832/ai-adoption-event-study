@@ -1,0 +1,94 @@
+# Li, Diep & Li (2026) 73 词 AI 词典（Table A2 原文抄录）
+
+> 出处：Li, J.; Diep, H.T.; Li, Y. Artificial Intelligence and Resilience Efficiency in China's
+> New Energy Industry. Energies, 2026, 19(22): 5413. DOI: 10.3390/en19225413
+> 抄录来源：论文 PDF 原文第 28–29 页 Appendix A Table A2（2026-11-21 由 Research Brain 从
+> mdpi-res.com 全文 PDF 逐词提取，共 73 个关键词，与正文"73 keywords"声明一致）。
+> 构词方法（论文正文）：52 个种子词（既往研究/行业报告/WIPO AI 术语）→ Word2vec Skip-gram
+> 基于年报+专利语料扩展 → 余弦相似度筛选 → 去重去低频，最终 73 词；jieba 加载为自定义词库。
+
+## Table A2 原文词表（73 词）
+
+1. Artificial Intelligence
+2. AI Products
+3. AI Chips
+4. Machine Translation
+5. Machine Learning
+6. Computer Vision
+7. Human–Computer Interaction
+8. Deep Learning
+9. Neural Networks
+10. Biometric Recognition
+11. Image Recognition
+12. Data Mining
+13. Feature Recognition
+14. Speech Synthesis
+15. Speech Recognition
+16. Knowledge Graph
+17. Smart Banking
+18. Intelligent Insurance
+19. Human–Machine Collaboration
+20. Intelligent Regulation
+21. Intelligent Education
+22. Intelligent Customer Service
+23. Intelligent Retail
+24. Intelligent Agriculture
+25. Intelligent Investment Advisory
+26. Augmented Reality
+27. Virtual Reality
+28. Intelligent Healthcare
+29. Smart Speakers
+30. Intelligent Voice
+31. Smart Government
+32. Autonomous Driving
+33. Intelligent Transportation
+34. Convolutional Neural Networks
+35. Voiceprint Recognition
+36. Feature Extraction
+37. Unmanned Driving
+38. Smart Home
+39. Question-Answering Systems
+40. Facial Recognition
+41. Business Intelligence
+42. Smart Finance
+43. Recurrent Neural Networks
+44. Reinforcement Learning
+45. Intelligent Agents
+46. Intelligent Elderly Care
+47. Big Data Marketing
+48. Big Data Risk Control
+49. Big Data Analytics
+50. Big Data Processing
+51. Support Vector Machine (SVM)
+52. Long Short-Term Memory (LSTM)
+53. Robotic Process Automation
+54. Natural Language Processing
+55. Distributed Computing
+56. Knowledge Representation
+57. Intelligent Chips
+58. Wearable Products
+59. Big Data Management
+60. Intelligent Sensors
+61. Pattern Recognition
+62. Edge Computing
+63. Big Data Platforms
+64. Intelligent Computing
+65. Intelligent Search
+66. Internet of Things
+67. Cloud Computing
+68. Augmented Intelligence
+69. Voice Interaction
+70. Intelligent Environmental Protection
+71. Human–Machine Dialogue
+72. Deep Neural Networks
+73. Big Data Operations
+
+## 与本项目 04_dict_baseline.py 词表 v1 的关系说明
+
+- 本项目词典基线（v1，45 个中文词）为该 73 词英文词表的**中文对应改编版**（年报为中文文本，
+  需中文匹配），另补充吴非等（2021,管理世界）AI 子词表——此为论文 3.2 节已披露的口径。
+- 上述英文原表为**权威原始出处**，论文附录可直接引用本文件；如需逐词严格对齐替换，
+  见上方中文对应关系（如 Machine Learning→机器学习、Facial Recognition→人脸识别、
+  Intelligent Customer Service→智能客服等，v1 已覆盖高频核心词 40+）。
+- 严格对齐替换属可选的稳健性增强项（论文 5.5 节"局限与展望"已注明词表敏感性），
+  非必须项：v1 词表与 LLM 度量的 Spearman ρ=0.576（p<0.001）已提供收敛证据。

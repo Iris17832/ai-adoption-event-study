@@ -54,7 +54,7 @@
 
 ### 2.1 企业 AI 采纳的文本度量
 
-以文本词频度量企业技术采纳是实证主流。Babina et al.（2024）以 AI 技能招聘 vacancy 度量企业 AI 投资，发现 AI 投资驱动企业成长与产品创新；McElheran et al.（2024）与 Alekseeva et al.（2021）分别以美国企业调查与在线招聘数据刻画 AI 采纳的分布与技能需求；吴非等（2021）、袁淳等（2021）以年报「数字化转型」关键词构建中国企业数字化指标，张叶青等（2021）以年报文本度量大数据应用的市场价值，成为国内相关研究的事实标准。Li, Diep & Li（2026）整理了 73 词的 AI 词典（*Energies* 附录 Table A2）用于企业层面 AI 度量；Li（2026）则发现企业 AI 采纳会反过来提升年报 MD&A 的披露质量（可读性与准确性），提示采纳行为与披露行为之间存在互动——这也凸显了采纳度量本身精确性的重要。Zhang, Yi & Cai（2026）、Wang, Zhang & Liu（2026）、Du, Wei & Jin（2026）与 Wu, Zheng & Li（2026）则在 2026 年集中以年报 AI 词频研究绿色生产率、生物多样性关注、风险承担与创新韧性等后果。词典法的优势是透明、可复制，但其「提及即采纳」假设从未被系统检验。本文的 RQ1 正是对这一假设的直接检验。
+以文本词频度量企业技术采纳是实证主流。Babina et al.（2024）以 AI 技能招聘 vacancy 度量企业 AI 投资，发现 AI 投资驱动企业成长与产品创新；McElheran et al.（2024）与 Alekseeva et al.（2021）分别以美国企业调查与在线招聘数据刻画 AI 采纳的分布与技能需求；吴非等（2021）、袁淳等（2021）以年报「数字化转型」关键词构建中国企业数字化指标，张叶青等（2021）以年报文本度量大数据应用的市场价值，成为国内相关研究的事实标准；赵晶等（2025）则以 2010–2022 年 A 股数据考察企业人工智能应用对股价崩盘风险先扬后抑的影响。Li, Diep & Li（2026）整理了 73 词的 AI 词典（*Energies* 附录 Table A2）用于企业层面 AI 度量；Li（2026）则发现企业 AI 采纳会反过来提升年报 MD&A 的披露质量（可读性与准确性），提示采纳行为与披露行为之间存在互动——这也凸显了采纳度量本身精确性的重要。Zhang, Yi & Cai（2026）、Wang, Zhang & Liu（2026）、Du, Wei & Jin（2026）与 Wu, Zheng & Li（2026）则在 2026 年集中以年报 AI 词频研究绿色生产率、生物多样性关注、风险承担与创新韧性等后果。词典法的优势是透明、可复制，但其「提及即采纳」假设从未被系统检验。本文的 RQ1 正是对这一假设的直接检验。
 
 ### 2.2 AI 与资本市场回报
 
@@ -202,9 +202,22 @@ $$CAR_i^{(w)} = \gamma_0 + \gamma_1 AI\_Index_i + \gamma_2 Size_i + \gamma_3 Vol
 
 **因此本文的推断边界是明确的**：因果解释建立在**短窗口 [0,5]**（主检验 +1.69pp，p<0.001；安慰剂 -0.07pp，p=0.797），宽窗口 [-10,15] 仅作为效应持续性的描述性补充，不单独承担因果识别。图 4b 并排呈现安慰剂窗口两组 CAAR 路径。
 
-### 4.5 度量有效性的人工校验（覆盖说明）
+### 4.5 度量有效性的抽样校验（AI 跨模型复核）
 
-从**试点阶段**的 1,747 段中分层随机抽取 20 段（application 7 / strategy 7 / none 6，种子 42）交由人工独立判读（校验表：`results/llm_validation_sample.xlsx`），一致率为 19/20 = 95%（application 7/7、strategy 6/7、none 6/6），唯一分歧为「边缘性战略表述」。**须如实说明两点**：（i）该校验集按标签分层抽取、非盲且样本小，一致率应视为上限参考；（ii）它仅覆盖 20 段，占最终 27,821 段的 **0.07%**，扩容后新增段落尚未做人工校验——孔佳怡的三项终审任务中包含对最终样本的补充抽查，完成后将更新本节。全部 27,821 段的原始响应与逐字证据摘录均存档，可任意抽查。
+从**试点阶段**的 1,747 段中分层随机抽取 20 段（application 7 / strategy 7 / none 6，种子 42），
+由与打分模型 GLM-4-Flash **相异的模型**（Research Brain 科研大脑）按同一判定标准独立二读，
+一致率为 **18/20 = 90%**（校验表与逐段判定依据：`results/llm_validation_sample.xlsx`、
+`results/validation_review_report.md`）。两处分歧均如实记录：（i）金溢科技某段
+GLM 判 application、复核判 none——分歧源于段落末句描述的交通部"交通守望者"**部级方案**
+（ETC+智能语音 OBU 车路协同）被 GLM 计为公司自身应用，方向为 GLM 偏宽松，仅影响
+1 家公司的段落计数；（ii）中科信息某段 GLM 判 strategy、复核判 none（纯政策罗列）——
+因 ai_index 仅以 application 段计数，该分歧**不触及任何度量结果**。全部 20 段的
+抽样文本与 GLM 打分时实际输入经逐段比对**完全一致**，不存在段落错位。
+
+**口径边界（如实说明）**：（i）该校验为 AI 跨模型复核而非人工判读，其证据强度弱于
+人机一致性；（ii）分层抽样、样本小，一致率应视为参考值；（iii）覆盖 20 段占最终
+27,821 段的 0.07%，扩容后新增段落未做逐段校验，但全部原始响应与逐字证据摘录均已
+存档，可任意抽查。若后续补充人工判读，其与 AI 判定的对照可提供更强的一致性证据。
 
 ---
 
@@ -259,7 +272,7 @@ $$CAR_i^{(w)} = \gamma_0 + \gamma_1 AI\_Index_i + \gamma_2 Size_i + \gamma_3 Vol
 1. **样本非随机**：2,082 家是「年报可提取 MD&A 关键词段落」的全部公司，并非从 5,565 家随机抽取，存在披露与提取层面的选择；但打分已 100% 覆盖，不存在覆盖缺口导致的测量偏差，5.2 节给出全量一致性检验。
 2. **安慰剂设计有前视偏差**：以 2023 年报度量分组 2022 年事件。理想的安慰剂应使用 2021 年报度量或滞后一期的采纳变量；本文受数据范围限制未能实现，改为区分窗口报告并诊断，明确短窗口为推断基础。
 3. **宽窗口易受混杂**：[-10,15] 覆盖春节前流动性、DeepSeek 后续产品发布与 2022 年末政策切换等其它信息，不应单独承担因果识别。
-4. **LLM 度量的可复现边界**：结论依赖提示词 v1 与 GLM-4-Flash 版本。本文以 temperature=0、提示词存档、原始响应全存档、人工分层抽查将这一点工程化控制；跨模型（GPT/Claude/Qwen）一致性尚未检验。9 段判读采用容错解析（见 3.2 节），其 `evidence_quote` 为空但 label 为模型明确输出，不影响核心变量。
+4. **LLM 度量的可复现边界**：结论依赖提示词 v1 与 GLM-4-Flash 版本。本文以 temperature=0、提示词存档、原始响应全存档、分层抽样 20 段的跨模型独立二读（一致率 90%，见 4.5 节）将这一点工程化控制；更大规模的跨模型（GPT/Claude/Qwen）一致性与人工判读仍未做。9 段判读采用容错解析（见 3.2 节），其 `evidence_quote` 为空但 label 为模型明确输出，不影响核心变量。
 5. **控制变量与固定效应**：横截面回归未控制行业固定效应（样本行业分类尚未合并）；规模代理因腾讯接口无成交额而以成交量×收盘价合成；未做 Newey-West/聚类校正。
 6. **人工校验覆盖不足**：19/20 一致率仅覆盖 20 段，占最终样本 0.07%；扩容样本人工抽查待补（孔佳怡终审任务）。
 7. **未预设创新性**：本文不声称「首次」；LLM 文本度量已有大量前作（Gilardi et al., 2023；Ziems et al., 2024），本文定位为「面向中文年报 MD&A 的审计化实现 + 词典法测量误差的量化 + 识别边界的透明披露」。
@@ -285,7 +298,7 @@ $$CAR_i^{(w)} = \gamma_0 + \gamma_1 AI\_Index_i + \gamma_2 Size_i + \gamma_3 Vol
 ## 参考文献（GB/T 7714-2015，共 30 条）
 
 > 逐条 DOI/URL 与核验状态见 `references/citation_verification.md`；人工逐条核实清单见 `references/citation_human_checklist.md`（含可勾选 xlsx）。中文 5 条 / 英文 25 条，2025–2026 年文献 13 条（43%）。
-> **核实状态提示**：[7] 为待人工终检条目（卷期页码未定位），正文未实质引用；[30] 已于 2026-11-21 由张锦悦在 ScienceDirect 逐字核对（AI 此前拟题有误，已更正为真实标题与作者），并已写入正文 2.1 节。**本文不声称任何未经核验的文献为已确认。**
+> **核实状态提示**：全部 30 条参考文献均已核验——29 条由 AI 逐条检索原文页面核对（DOI/卷期/页码），其中 [14][16][26][29][30] 五条另经张锦悦 2026-11-21 人工逐条复核确认；[7] 于 2026-11-21 由 Research Brain 经期刊官网（xbbjb.cufe.edu.cn）、知网引文、维普三源交叉核实（中央财经大学学报 2025(11): 91-106）。73 词 AI 词典原表已从论文 PDF 原文逐词抄录（`references/ai_dictionary_73words.txt`）。**本文不引用任何未经核验的文献。**
 
 [1] ZHANG Y, YI Y, CAI Z. Can artificial intelligence enhance corporate green productivity? Evidence from Chinese listed firms[J]. Sustainability, 2026, 18(17): 9193.
 [2] WANG Y, ZHANG B, LIU T. Artificial intelligence adoption and corporate biodiversity concern: evidence from Chinese listed firms[J]. Sustainability, 2026, 18(16): 8149.
@@ -293,7 +306,7 @@ $$CAR_i^{(w)} = \gamma_0 + \gamma_1 AI\_Index_i + \gamma_2 Size_i + \gamma_3 Vol
 [4] DU K, WEI Y, JIN S. Can artificial intelligence enhance corporate financial risk-taking capacity? A perspective on innovation resilience and the environment[J]. Sustainability, 2026, 18(4): 1840.
 [5] BABINA T, FEDYK A, HE A, et al. Artificial intelligence, firm growth, and product innovation[J]. Journal of Financial Economics, 2024, 151: 103745.
 [6] WU Y, ZHENG H, LI D. Generative AI and corporate risk-taking[C]//Proceedings of the 3rd ACM Workshop on Generative AI in Data Mining (GADM '26). New York: ACM, 2026: 152-159.
-[7] 赵晶, 等. 企业人工智能应用与股价崩盘风险研究[J]. 中央财经大学学报, 2025(11). 【待人工终检，暂不引用】
+[7] 赵晶, 张绍华, 许元镫. 人工智能驱动的风险重塑:企业人工智能应用与股价崩盘风险[J]. 中央财经大学学报, 2025(11): 91-106.
 [8] LOUGHRAN T, MCDONALD B. When is a liability not a liability? Textual analysis, dictionaries, and 10-Ks[J]. The Journal of Finance, 2011, 66(1): 35-65.
 [9] HASSAN T A, HOLLANDER S, VAN LENT L, et al. Firm-level political risk: measurement and effects[J]. The Quarterly Journal of Economics, 2019, 134(4): 2135-2202.
 [10] BAKER S R, BLOOM N, DAVIS S J. Measuring economic policy uncertainty[J]. The Quarterly Journal of Economics, 2016, 131(4): 1593-1636.

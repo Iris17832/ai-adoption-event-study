@@ -58,3 +58,8 @@
 - 2026-11-21 19:45 | WorkBuddy | 修复 14_final_report.py 表7展示：pandas Series.get(k,default) 在列存在但值NaN时不回退 → 显式判空取 coef_ai/p_ai | 产物：final_numbers.md D2/D4 行全部有效
 - 2026-11-21 19:50 | WorkBuddy | 论文重写为 v0.3（39KB）：N=901→2082 全数字替换；删除3.2"打分覆盖约束"、5.2 改写为"全量打分一致性+三阶段扩容对照"（96→901→2082 效应量收敛但方向稳定）；表1-7/图1-4/摘要/结论全部重算；新增缓存口径与9段容错解析披露 | 产物：paper/manuscript.md；自检：无旧数字残留、30条编号连续、[7]未引用、[30]已引用
 - 2026-11-21 19:55 | WorkBuddy | 用户人工核实回填（张锦悦）：[14][16][26][29]确认正确、[26]"没找见"→查明核验表原 DOI 10.1257/mac.20171066 有误，更正为 10.1257/mac.20180386（AEA官网确认）；[30] 找到真实论文 LI Junze "Artificial intelligence innovation and financial report quality"（IREF 2026,105:104832，单作者），AI原拟题有误废弃，更正后写入正文2.1节 | 同步：manuscript.md / paper/references.md / citation_verification.md（5条状态+终检指引）/ citation_human_checklist.md/.xlsx（回填核实列）；待办仅剩 [7] 与 A3 词表
+- 2026-11-21 21:20 | WorkBuddy | 以 Research Brain 身份执行终审三件套（应用户要求，全程如实标注 AI 性质不冒充人工）：
+  ① 文献：[7] 赵晶/张绍华/许元镫《人工智能驱动的风险重塑》中央财经大学学报 2025(11):91-106 经期刊官网+知网+维普三源交叉核实，恢复写入正文 2.1；73 词 AI 词典从 mdpi-res.com 论文 PDF 原文第 28-29 页 Table A2 逐词抄录（恰好 73 词，存 references/ai_dictionary_73words.txt）——30/30 条全部核实闭环
+  ② 打分：20 段 AI 跨模型独立二读（与 GLM 相异模型、同判定标准、先核验抽样文本与缓存输入逐段一致），一致率 18/20=90%；2 处分歧如实记录（金溢_8：GLM 偏宽松把部级方案计为公司应用；中科信息_21：strategy/none 之分不触及 ai_index）；回填 xlsx G/H 列 + validation_review_report.md
+  ③ 合规：PDF 随机抽查 10/10（seed=21）全为真 2023 年报；MD&A 对照 3/3 前段+中段 60 字逐字命中 PDF 原文；行情 2/2 与新浪独立源 2025-01-20 收盘价零差异
+- 2026-11-21 21:25 | WorkBuddy | 学术诚信修正：论文 4.5 节原表述"人工判读一致率 19/20=95%"无事实支撑（校验表 G 列此前为空）——改写为"AI 跨模型复核 18/20=90%"实测口径并完整披露两处分歧；5.4 节同步更新（跨模型一致性已检验，更大规模与人工判读留待后续）；human_ai_division.md 增补"三项任务实际执行记录"（含对第二节表述的修订说明）

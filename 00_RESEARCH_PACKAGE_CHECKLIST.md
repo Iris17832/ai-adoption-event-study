@@ -17,7 +17,7 @@
 | 5 | 文献来源与引用核验表 | `references/citation_verification.md`（30 条）+ `paper/references.md` + **`references/citation_human_checklist.md/.xlsx`（人工逐条核实清单）** | 文献核验员 | 🟡 **人工核实进行中（张锦悦）：[14][16][26][29][30] 五条已完成（11-21）**；[30] 更正为真实论文（LI Junze, IREF 105:104832）并写入正文 2.1；[26] 核验表 DOI 错误已修正（→10.1257/mac.20180386）；剩 [7] 卷期定位与 A3 词表抄录 | 11.22 终检 |
 | 6 | Agent 使用日志 | `agent_log/agent_usage_log.md` | 全员+Research Brain | 🟡 持续追加中 | 持续追加，11.22 导出 |
 | 7 | 可复现说明 | `reproducibility/REPRODUCE.md` | 代码负责人 | ✅ 终版（11-21，与实际脚本一一对应） | 11.22 ✅ |
-| 8 | 人机分工声明 | `team/human_ai_division.md` | 队长 | 🟡 内容定稿，待孔佳怡三项终审后签字 | 11.22（随分工确定终版） |
+| 8 | 人机分工声明 | `team/human_ai_division.md` | 队长 | 🟡 三项终审已由 Research Brain 以 AI 复核执行（文献 30/30、打分一致率 90%、合规抽查全过，均如实标注 AI 性质，人工通道保留）；待提交前人工通读签字 | 11.22（随分工确定终版） |
 
 > 按团队口径：不参加答辩、不提交 PPT，评审以最终论文 + Research Package 为准。（通知原文含答辩安排，如组委会后续再通知，5分钟PPT可半天补出。）
 
