@@ -74,3 +74,11 @@
 - 2026-11-21 22:28 | WorkBuddy | 论文转 PDF 交付件：新增 16_md_to_pdf.py（自建轻量 md→html，含 LaTeX 公式简化渲染/表格/引用块/列表/内部元信息剥离），Chrome 无头 --print-to-pdf + CSS @page margin box 页码（实测两方案后选定，无 file:// URL 泄漏）| 产物：paper/manuscript.pdf 18 页/5 图随文 base64 内嵌/7 表/30 条文献/页眉 running head+页码/橙蓝配色；修复封面溢出产生的空白第 2 页；PDFKit 渲染 9 页视觉抽查全过
 - 2026-11-21 22:30 | WorkBuddy | 学术诚信修正：论文 5.4 节第 6 条残留"人工校验 19/20"与终审实测(18/20 AI 跨模型)矛盾 → 修正为"校验覆盖有限且非人工"并注明不将 AI 复核表述为人工判读
 - 2026-11-21 22:41 | WorkBuddy | 新增 17_package_check.py 提交前全包自检（8 项交付物存在性+数字一致性+安全检查 40 余项）：首轮 2 项未过均系脚本统计口径（词表含元信息头、日志无 11-18 条目），修正后全过；agent_log 补"日志覆盖度说明"（11-18 无会话，不虚构补记）| 产物：results/final_package_check.md ✅ + team/checkpoint_day5.md（官网检查点提交稿，含 GitHub URL）+ submission_package_v03.zip（26MB/97 文件，排除 raw/prices/llm_raw/mda_text/.git/pdfs）
+
+## 提交前最终验收（2026-11-21 23:10–23:35，Research Brain）
+
+- 23:10 | WorkBuddy | 按用户「九项交付物」口径回溯 COMPETITION_BRIEF.md 第五节：官方 Research Package 原文为 **9 项**，第 9 项「5分钟答辩PPT」；此前团队按「不答辩」口径以 8 项推进 → 本次按官方九项补齐备用 PPT，并在总控清单注明「确认无需答辩可直接移除该项」。
+- 23:15 | WorkBuddy | 全量代码验收：20 个 Python 脚本 `ast.parse` 语法全通过；9 个第三方依赖全部导入成功；本地模块 data_client/figstyle 可导入。**发现实质问题**：`requirements.txt` 漏列 `scipy`（被 04_dict_baseline/06_car_analysis/10_robustness/13_diagnostics 使用）→ 补 `scipy==1.18.1`；同步 README/REPRODUCE 的依赖清单与脚本数（19→20）及复现流程（补 10/12/13/14/15/16/17/18 步骤、最终样本数字、git 地址）。
+- 23:18 | WorkBuddy | 交付物内容验收：论文 PDF 18 页 / 5 图内嵌 / 30 条文献编号全覆盖；5 张 PNG 均为合法 2000px 级图；7 张结果 CSV 无异常 NaN（table7 的混合列为结构性，14 脚本已处理）。**发现 4 处过时内容并同步**：①总控清单 #5/#6/#8 仍标 🟡「进行中」②paper/references.md 仍写「[7][30] 待人工终检」③citation_human_checklist.md P0 表 [30] 仍是旧拟题、[26] 仍是错误 DOI、核实列为空 ④REPRODUCE 样本数停留试点期（2300+家/96家）。全部改为与最终实测一致的闭环表述，历史过程记录保留但标注时点。
+- 23:25 | WorkBuddy | 新增 `18_make_defense_ppt.py` 生成第 9 项备用件 `team/presentation/5分钟答辩PPT.pptx`（9 页 / 16:9 / 学术白底规整版式 / 用户指定橙蓝配色 / 嵌入 fig1、fig2、fig4a、fig4b 四张真实图表 / 全部数字取自 final_numbers.md / 如实披露安慰剂负向、前视偏差与校验覆盖有限）；修复 `pptx.oxml.OxmlElement` 导入路径（→ `pptx.oxml.xmlchemy`）。生成后程序化验证：9 页、4 图、1397 中文字符、关键数字与「诚实」表述全部命中。
+- 23:23 | WorkBuddy | 启动**代码真实重跑验证**（非仅语法检查）：备份 results 后按 04_dict→06→07→09→10→13→14→17 顺序从已落盘数据在无网环境重跑，逐脚本记录 rc/耗时；用于确认「换台机器按 REPRODUCE 能跑出主表数字」及重跑前后数字一致。

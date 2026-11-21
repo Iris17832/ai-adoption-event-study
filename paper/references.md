@@ -73,5 +73,5 @@
 ## 使用说明
 
 1. 序号以正文最终定稿顺序为准，本列表按主题分组方便写作取材；投稿前用 Word/TeX 重排编号。
-2. [7][30] 两条待人工终检补全（见 citation_verification.md），终检未完成前写作时先留 [序号] 占位。
+2. **全部 30 条已于 2026-11-21 完成核验并写入正文**：[7] 赵晶等（2025）经期刊官网+知网+维普三源交叉定位；[30] 由人工核正为 LI Junze（2026, IREF 105:104832）真实论文；[26] 的 DOI 登记错误已更正为 `10.1257/mac.20180386`；[14][16][29] 人工复核通过。详见 `references/citation_verification.md` 与 `citation_human_checklist.md`。
 3. 若审稿/评委偏好 APA 格式，转换规则：GB/T 的 `ZHANG Y, YI Y, CAI Z.` → APA 的 `Zhang, Y., Yi, Y., & Cai, Z.`，期刊名斜体、DOI 保留。
