@@ -6,3 +6,6 @@ __pycache__/
 
 # 第三方文献全文 PDF 不纳入版本库（本地保留供核验，避免公开仓库再分发他人全文）
 references/pdfs/
+
+# 论文 HTML 为本地预览中间产物（提交件为 manuscript.pdf）
+paper/manuscript.html
