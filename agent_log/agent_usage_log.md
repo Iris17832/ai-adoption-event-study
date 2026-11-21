@@ -42,3 +42,9 @@
 - 2026-11-20 22:55 | WorkBuddy | 事件研究主结果（首次跑通）：DeepSeek事件高AI组 vs 低AI组 CAR[0,5] 差+2.41pp(p=0.061)、CAR[-10,15] 差+7.72pp(p=0.041)；回归 ai_index 系数 CAR[-10,15]=0.292(p=0.0014,R2=0.104)；安慰剂ChatGPT窗口全窗口无显著差异(p=0.53-0.97) → 识别策略干净，核心假设获实证支持 | 产物：results/car_panel_deepseek.csv
 - 2026-11-20 22:58 | WorkBuddy | 横截面回归（控制规模代理/波动/动量）：ai_index 系数 CAR[0,5]=0.067(p=0.025)、CAR[-10,15]=0.245(p=0.0038,R2=0.371) | 产物：results/table4_cross_section.csv + fig4(deepseek)/fig4(placebo) 出图，全部4张图齐备
 - 2026-11-20 23:00 | WorkBuddy | 全量已下载公司行情后台拉取中（task SsJGJs，约1200家×2窗口，供样本扩容稳健性）
+- 2026-11-21 17:45 | WorkBuddy | 复盘后台终局：下载补漏结束（3460家成功/1830 HTTP错误/268 not_found，年报PDF 3461份）；全链路其实已于13:37跑完（901家扩容样本，上次因502未看到结果）；打分缓存15,600段 | 产物：results/full_sample_run.txt（表2-6 + fig1-4 全部落盘）
+- 2026-11-21 17:50 | WorkBuddy | 发现两个学术诚信问题并主动处理：①901家中388家段落未完整打分（缺992段）②安慰剂CAR[-10,15]扩容后显著负向(-4.47pp,p<0.001)，与v0.1"各窗口均不显著"冲突。GLM限额已重置(200 OK)，12并发后台补齐打分(task r5LxlR) | 决策：不掩盖、不照抄旧结论，转为诊断与稳健性证据
+- 2026-11-21 18:00 | WorkBuddy | 新增 13_diagnostics.py 诊断：D1完整子样本(513家)主结论方向不变仍显著但效应量约减半(+1.35pp p=0.015 / +3.26pp p=0.012)；D2 beta非成因(安慰剂高低组beta p=0.70，控制beta后系数不变)；D4控制公司特征后负向仍存在(-0.0693,p=0.0042)→归因为前视偏差+2022年末宏观冲击窗口重叠 | 产物：results/table7_diagnostics.csv + diagnostics_report.txt + car_panel_placebo.csv
+- 2026-11-21 18:05 | WorkBuddy | 论文重写为 v0.2（37KB）：全部数字由试点96家→扩容901家；新增4.4/5.2/5.3节如实披露安慰剂负向与部分打分问题；稳健性改为已完成；参考文献30条嵌入正文并标注[7][30]待人工终检、正文未实质引用 | 产物：paper/manuscript.md
+- 2026-11-21 18:10 | WorkBuddy | 新增 14_final_report.py（从results/*.csv自动生成数字快照，杜绝手工抄数）+ run_final_chain.sh 最终样本自动接力链(task Y0R0vZ：等打分完成→12聚合→05行情→06/07/09/10/13→14快照) | 产物：results/final_numbers.md（当前901家快照，与v0.2数字完全一致）
+- 2026-11-21 18:12 | WorkBuddy | 更新总控清单：#1→v0.2、#4→✅扩容样本齐备、修正"答辩PPT"残留表述、11.21清单按实测重写 | 产物：00_RESEARCH_PACKAGE_CHECKLIST.md

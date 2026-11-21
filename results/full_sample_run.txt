@@ -1,0 +1,83 @@
+=== 12:00 扩容样本全链路 ===
+词典法指数计算完成: 2217 家 -> /Users/a1234/WorkBuddy/2026-11-17-18-33-48/research-package/code/../data/processed/ai_adoption_dict.csv
+词典法 vs LLM法 AI采纳指数对比（N=2217 家）
+
+合并样本: 901 家
+Spearman 相关: rho=0.605 (p=0.0000)
+Pearson 相关: r=0.490 (p=0.0000)
+词典法识别为采纳(dict_index>0): 1778/2217 家
+LLM法识别为采纳(ai_index>0): 554/901 家
+词典法>0 但 LLM法=0（词典法高估）: 267 家 (29.6% of 合并样本)
+=== 06 CAR ===
+已打分公司: 901
+
+===== deepseek（事件日 2025-01-20）分组检验 =====
+ CAR_window  high_mean  high_n  low_mean  low_n   diff  t_stat  p_value
+  CAR[-1,1]     0.0095     450    0.0055    450 0.0039  1.1619   0.2456
+   CAR[0,5]     0.0125     450   -0.0094    450 0.0218  4.8858   0.0000
+  CAR[-2,2]     0.0134     450    0.0121    450 0.0013  0.3190   0.7498
+CAR[-10,15]     0.0994     450    0.0291    450 0.0703  6.7175   0.0000
+
+----- deepseek CAR ~ ai_index 回归 -----
+ CAR_window  coef_ai_index     se       t      p     r2   n
+  CAR[-1,1]         0.0059 0.0082  0.7106 0.4775 0.0006 900
+   CAR[0,5]         0.0674 0.0108  6.2473 0.0000 0.0417 900
+  CAR[-2,2]        -0.0028 0.0100 -0.2789 0.7804 0.0001 900
+CAR[-10,15]         0.2215 0.0250  8.8502 0.0000 0.0802 900
+
+===== placebo（事件日 2022-11-30）分组检验 =====
+ CAR_window  high_mean  high_n  low_mean  low_n    diff  t_stat  p_value
+  CAR[-1,1]    -0.0170     391   -0.0192    388  0.0022  0.7176   0.4732
+   CAR[0,5]    -0.0171     391   -0.0184    388  0.0013  0.2900   0.7719
+  CAR[-2,2]    -0.0050     391   -0.0063    388  0.0013  0.3288   0.7424
+CAR[-10,15]    -0.1342     391   -0.0895    388 -0.0447 -4.4911   0.0000
+
+----- placebo CAR ~ ai_index 回归 -----
+ CAR_window  coef_ai_index     se       t      p     r2   n
+  CAR[-1,1]         0.0136 0.0074  1.8260 0.0682 0.0043 779
+   CAR[0,5]         0.0183 0.0106  1.7367 0.0828 0.0039 779
+  CAR[-2,2]         0.0144 0.0092  1.5664 0.1177 0.0031 779
+CAR[-10,15]        -0.1011 0.0241 -4.1984 0.0000 0.0222 779
+
+面板已存档: results/car_panel_deepseek.csv
+=== 07 横截面 ===
+面板样本: 900
+
+--- CAR[-1,1]: ai_index coef=0.0088 (t=1.05, p=0.2929), R2=0.010, N=900
+
+--- CAR[0,5]: ai_index coef=0.0786 (t=7.38, p=0.0000), R2=0.101, N=900
+
+--- CAR[-2,2]: ai_index coef=0.0029 (t=0.29, p=0.7743), R2=0.030, N=900
+
+--- CAR[-10,15]: ai_index coef=0.2199 (t=9.22, p=0.0000), R2=0.196, N=900
+
+已写入 results/table4_cross_section.csv
+ CAR_window   coef      t      p
+  CAR[-1,1] 0.0088 1.0524 0.2929
+   CAR[0,5] 0.0786 7.3769 0.0000
+  CAR[-2,2] 0.0029 0.2869 0.7743
+CAR[-10,15] 0.2199 9.2199 0.0000
+=== 09 图表 ===
+findfont: Failed to find font weight bold for PingFang SC, now using 600.
+findfont: Failed to find font weight bold for PingFang SC, now using 600.
+fig1 ok
+fig2 ok
+fig3 ok
+fig4(deepseek) ok
+fig4(placebo) ok
+全部图表 -> /Users/a1234/WorkBuddy/2026-11-17-18-33-48/research-package/code/../results/figures
+=== 10 稳健性 ===
+稳健性样本: 900 家（段落级聚合 901 家 ∩ CAR 面板 900 家）
+robustness     measure      window  high_mean  low_mean   diff      t      p  n_hi  n_lo
+  主指数(中位数)    ai_index    CAR[0,5]     0.0125   -0.0094 0.0218 4.8858 0.0000   450   450
+  主指数(中位数)    ai_index CAR[-10,15]     0.0994    0.0291 0.0703 6.7175 0.0000   450   450
+  主指数(P75)    ai_index    CAR[0,5]     0.0218   -0.0052 0.0270 4.9388 0.0000   225   675
+  主指数(P75)    ai_index CAR[-10,15]     0.1350    0.0407 0.0943 6.5471 0.0000   225   675
+   R1 等权指数 ai_index_eq    CAR[0,5]     0.0125   -0.0094 0.0218 4.8858 0.0000   450   450
+   R1 等权指数 ai_index_eq CAR[-10,15]     0.0994    0.0291 0.0703 6.7175 0.0000   450   450
+  R2 仅应用密度  ai_density    CAR[0,5]     0.0103   -0.0074 0.0176 3.9319 0.0001   455   445
+  R2 仅应用密度  ai_density CAR[-10,15]     0.0935    0.0344 0.0591 5.6300 0.0000   455   445
+   R3 二值采纳   ai_binary    CAR[0,5]     0.0098   -0.0091 0.0188 4.1918 0.0000   508   392
+   R3 二值采纳   ai_binary CAR[-10,15]     0.0915    0.0289 0.0626 6.1082 0.0000   508   392
+
+输出: /Users/a1234/WorkBuddy/2026-11-17-18-33-48/research-package/code/../results/table6_robustness.csv
