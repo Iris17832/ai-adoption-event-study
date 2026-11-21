@@ -1,0 +1,15 @@
+=== 代码真实重跑验证 2026-11-21 23:22:59 ===
+--- 04_dict_baseline.py  rc=0  耗时=131s
+词典法指数计算完成: 2217 家 -> /Users/a1234/WorkBuddy/2026-11-17-18-33-48/research-package/code/../data/processed/ai_adoption_dict.csv
+--- 06_car_analysis.py  rc=0  耗时=240s
+--- 07_cross_section.py  rc=0  耗时=117s
+--- 09_make_figures.py  rc=0  耗时=249s
+findfont: Failed to find font weight bold for PingFang SC, now using 600.
+findfont: Failed to find font weight bold for PingFang SC, now using 600.
+--- 10_robustness.py  rc=0  耗时=3s
+--- 13_diagnostics.py  rc=0  耗时=335s
+--- 14_final_report.py  rc=0  耗时=2s
+- 已完成 LLM 判读：27821 段 / 2082 家公司
+--- 17_package_check.py  rc=0  耗时=2s
+## 总体结论：✅ 全部通过，可提交
+=== 重跑全部结束 23:40:59 ===

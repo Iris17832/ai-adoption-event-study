@@ -1,6 +1,6 @@
 # 提交前全包自检报告
 
-生成时间：2026-11-21 22:40
+生成时间：2026-11-21 23:40
 
 ## ① 论文原型（PDF）
 - ✅ **manuscript.md 存在** 
@@ -20,7 +20,7 @@
 ## ② 代码仓库及 README
 - ✅ **README.md 存在** 
 - ✅ **requirements.txt 存在** 
-- ✅ **脚本齐备（19 个 .py）** 01_fetch_stock_list.py, 02_download_reports.py, 03_extract_mda.py, 04_dict_baseline.py, 04_llm_scoring.py, 05_fetch_prices.py, 06_car_analysis.py, 07_cross_section.py, 09_make_figures.py, 10_robustness.py, 11_make_citation_checklist.py, 12_aggregate_partial.py, 13_diagnostics.py, 14_final_report.py, 15_patch_missing.py, 16_md_to_pdf.py, 17_package_check.py, data_client.py, figstyle.py
+- ✅ **脚本齐备（20 个 .py）** 01_fetch_stock_list.py, 02_download_reports.py, 03_extract_mda.py, 04_dict_baseline.py, 04_llm_scoring.py, 05_fetch_prices.py, 06_car_analysis.py, 07_cross_section.py, 09_make_figures.py, 10_robustness.py, 11_make_citation_checklist.py, 12_aggregate_partial.py, 13_diagnostics.py, 14_final_report.py, 15_patch_missing.py, 16_md_to_pdf.py, 17_package_check.py, 18_make_defense_ppt.py, data_client.py, figstyle.py
 - ✅ **data_client.py 存在（数据通道）** 
 - ✅ **figstyle.py 存在（橙蓝配色）** 
 
@@ -52,7 +52,7 @@
 - ✅ **词典词数 = 73** (实测 73)
 
 ## ⑥ Agent 使用日志
-- ✅ **日志存在且持续追加** (9621 字符)
+- ✅ **日志存在且持续追加** (13145 字符)
 - ✅ **覆盖 11-17/19/20/21 四个活跃日** 
 
 ## ⑦ 可复现说明
