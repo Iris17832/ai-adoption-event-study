@@ -2,10 +2,14 @@
 """
 12_aggregate_partial.py — 从 llm_raw 缓存重建扩容样本的公司级 AI 采纳指数
 =====================================================================
-背景：2026-11-21 GLM 免费额度触发 429 速率限制，04_llm_scoring.py 未完成全部
-27,821 段。断点续跑缓存 llm_raw/{para_id}.json 已覆盖 15,600 段 / 1,625 家公司，
-本脚本直接从缓存聚合出可分析样本（与主脚本 04 完全一致的聚合公式），
-避免重复耗费 API 额度，也不伪造任何判读结果。
+背景：2026-11-21 全量打分收尾时，04_llm_scoring.py 因读到 2 个半写 JSON 缓存
+崩溃；经 15_patch_missing.py 精准补打后，段落表 27,821 段已 100% 完成判读。
+本脚本直接从 llm_raw 缓存聚合出最终可分析样本（聚合公式与主脚本 04 完全一致），
+不重复耗费 API 额度，也不伪造任何判读结果。
+
+重要口径：缓存中另有 724 个早期试点阶段"纯数字行号"命名的历史文件，已逐条
+验证其对应段落全部存在新格式缓存（100% 重复）。为确保 n_paras 与段落表严格
+一致，最终样本只保留 para_id 存在于 mda_paragraphs.csv 的缓存，排除这些重复项。
 
 产物：
   data/processed/ai_adoption_llm.csv   （段落级，覆盖全部已判读缓存）
@@ -76,20 +80,18 @@ def main():
                 buf.append(line + "\n")
         flush(cur, buf)
 
+    # 只保留段落表中真实存在的 para_id：自动排除 724 个早期试点"纯数字行号"
+    # 命名的重复缓存（其对应段落均有新格式缓存，纳入会使 n_paras 虚高）。
+    para_id_set = set(para_src["para_id"].astype(str))
+    n_dup_excluded = 0
     rows = []
     for para_id, rec in records.items():
-        if "_" in para_id:
-            # 现行格式：{code}_{段内序号}
-            code = para_id.rsplit("_", 1)[0]
-            name = name_map.get(code, "")
-        else:
-            # 早期试点格式：纯数字 = mda_paragraphs.csv 的 0-based 行号
-            # 已逐条验证 paragraph_head 与该行段落开头完全一致
-            try:
-                row = para_src.iloc[int(para_id)]
-                code, name = str(row["code"]), str(row["name"])
-            except Exception:
-                continue
+        if para_id not in para_id_set:
+            n_dup_excluded += 1
+            continue
+        # 现行格式：{code}_{段内序号}
+        code = para_id.rsplit("_", 1)[0]
+        name = name_map.get(code, "")
         rows.append({
             "para_id": para_id, "code": code, "name": name,
             "label": rec.get("label"), "domain": rec.get("domain", ""),
@@ -130,16 +132,22 @@ def main():
     label_dist = para["label"].value_counts().to_dict()
     stats = {
         "source": "llm_raw cache (GLM-4-Flash, prompt v1, temperature=0)",
-        "n_paragraphs_total_planned": 27821,
+        "n_paragraphs_total_planned": int(len(para_src)),
         "n_paragraphs_scored": int(len(para)),
+        "paragraph_coverage": round(len(para) / len(para_src), 4),
+        "n_firms_in_paragraph_table": int(para_src["code"].nunique()),
         "n_firms_scored": int(len(firm)),
+        "duplicate_legacy_cache_excluded": int(n_dup_excluded),
         "label_distribution": {k: int(v) for k, v in label_dist.items()},
         "application_share": round(float(label_dist.get("application", 0)) / len(para), 4),
         "n_firms_ai_positive": int((firm["ai_index"] > 0).sum()),
         "ai_index_mean": round(float(firm["ai_index"].mean()), 4),
         "ai_index_median": round(float(firm["ai_index"].median()), 4),
         "ai_index_max": round(float(firm["ai_index"].max()), 4),
-        "note": "扩容样本：受 GLM 免费额度 429 速率限制，未打完的段落不在本样本内；样本按股票代码顺序覆盖，无公司特征层面的选择机制。",
+        "note": ("最终样本：段落表全部段落已完成 LLM 判读（覆盖率见 paragraph_coverage），"
+                 "不存在'部分打分'导致的测量偏差；已排除早期试点纯数字命名的重复缓存 "
+                 "（duplicate_legacy_cache_excluded）。样本覆盖年报可提取 MD&A 关键词段落的"
+                 "全部公司，无公司特征层面的选择机制。"),
     }
     json.dump(stats, open(STATS, "w"), ensure_ascii=False, indent=2)
     print(json.dumps(stats, ensure_ascii=False, indent=2))

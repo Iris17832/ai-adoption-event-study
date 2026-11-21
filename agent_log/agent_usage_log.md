@@ -48,3 +48,7 @@
 - 2026-11-21 18:05 | WorkBuddy | 论文重写为 v0.2（37KB）：全部数字由试点96家→扩容901家；新增4.4/5.2/5.3节如实披露安慰剂负向与部分打分问题；稳健性改为已完成；参考文献30条嵌入正文并标注[7][30]待人工终检、正文未实质引用 | 产物：paper/manuscript.md
 - 2026-11-21 18:10 | WorkBuddy | 新增 14_final_report.py（从results/*.csv自动生成数字快照，杜绝手工抄数）+ run_final_chain.sh 最终样本自动接力链(task Y0R0vZ：等打分完成→12聚合→05行情→06/07/09/10/13→14快照) | 产物：results/final_numbers.md（当前901家快照，与v0.2数字完全一致）
 - 2026-11-21 18:12 | WorkBuddy | 更新总控清单：#1→v0.2、#4→✅扩容样本齐备、修正"答辩PPT"残留表述、11.21清单按实测重写 | 产物：00_RESEARCH_PACKAGE_CHECKLIST.md
+- 2026-11-21 19:05 | WorkBuddy | 后台打分任务 r5LxlR 崩溃复盘：并非 429 限流，而是 04 读缓存时遇到 2 个半写 JSON（非原子写 open(...,"w") + 进程中断）抛 JSONDecodeError 未捕获 → exit 1；旧接力链 Y0R0vZ 死等"公司级聚合"标志（3h 超时）已手动停止 | 处置：修复 04（容错读+os.replace 原子写）、停旧链、改精准补打
+- 2026-11-21 19:15 | WorkBuddy | 新增 15_patch_missing.py（awk 批量校验缓存→只补缺失段→复用 04 prompt）。首轮 4 并发 9/11 FAILED；逐段调试定位根因：GLM 把原文中文引号/反斜杠原样写入 evidence_quote 形成非法 JSON 转义（Invalid \escape），label 本身正确却被连带丢弃 | 修复：04 新增 _parse_model_output（标准解析→非法转义清洗→正则抽核心字段；evidence_quote 不可靠时置空、不伪造；parse_note 记录解析方式）
+- 2026-11-21 19:20 | WorkBuddy | 补打完成：27,821/27,821 段 100% 覆盖（补回 5 application / 4 strategy / 2 none）；另查明 724 个早期"纯数字行号"缓存 100% 与新格式重复（涉及43家）→ 12 脚本改为只保留段落表真实 para_id，消除 n_paras 虚高与"部分打分"测量偏差 | 产物：最终样本 2,082 家 / 27,821 段 / 覆盖率 1.0；label 分布 application 5278(19.0%) / strategy 7263 / none 15280
+- 2026-11-21 19:22 | WorkBuddy | 启动 2,082 家最终样本全链路后台重估（task X4Nm5k）：05 行情补拉→04_dict→06 CAR→07 横截面→09 图表→10 稳健性→13 诊断→14 数字快照

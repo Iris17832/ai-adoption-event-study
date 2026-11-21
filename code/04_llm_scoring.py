@@ -10,7 +10,7 @@
     data/processed/ai_adoption_firm.csv       公司级聚合指数（论文核心变量）
 提示词版本: prompts/llm_scoring_prompt_v1.md（三分类 + 证据摘录）
 """
-import sys, os, json, time, argparse, threading
+import sys, os, re, json, time, argparse, threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pandas as pd
@@ -65,12 +65,62 @@ def load_key():
 _KEY = load_key()
 _print_lock = threading.Lock()
 
+def _parse_model_output(content):
+    """解析 GLM 返回的 JSON，容忍 evidence_quote 摘录原文时带入的非法转义。
+
+    2026-11-21 发现 9 个段落反复 FAILED：GLM 把原文的中文引号/反斜杠原样
+    写进 JSON 字符串（如 \\“ 或 \\下），json.loads 抛 Invalid \\escape，而
+    label 本身是正确输出的。处理顺序：
+      1) 标准解析；
+      2) 去掉「反斜杠 + 非标准 JSON 转义字符」中的反斜杠后重试；
+      3) 仍失败则正则只抽取核心结构化字段（label/domain/investment_mention/
+         confidence），evidence_quote 置空——该字段仅用于审计展示，不参与
+         ai_index 计算，故不影响核心变量，也不伪造摘录。
+    返回 (dict, note)，note 写入缓存供审计（standard / unescape / regex_fallback）。
+    """
+    c = content.strip()
+    if c.startswith("```"):
+        c = c.strip("`").lstrip("json").strip()
+    for cand, note in ((c, "standard"),
+                       (re.sub(r'\\(?!["\\/bfnrtu])', "", c), "unescape")):
+        try:
+            obj = json.loads(cand)
+            if isinstance(obj, dict) and obj.get("label") in ("application", "strategy", "none"):
+                return obj, note
+        except (json.JSONDecodeError, TypeError):
+            continue
+    obj = {}
+    m = re.search(r'"label"\s*:\s*"(application|strategy|none)"', c)
+    obj["label"] = m.group(1) if m else None
+    if obj["label"] is None:
+        raise json.JSONDecodeError("label not found", c, 0)  # 触发上层重试
+    m = re.search(r'"domain"\s*:\s*"([^"]*)"', c)
+    obj["domain"] = m.group(1) if m else "无"
+    m = re.search(r'"investment_mention"\s*:\s*(true|false)', c)
+    obj["investment_mention"] = (m.group(1) == "true") if m else False
+    m = re.search(r'"confidence"\s*:\s*"(high|medium|low)"', c)
+    obj["confidence"] = m.group(1) if m else ""
+    m = re.search(r'"firm_ai_activity"\s*:\s*(true|false)', c)
+    obj["firm_ai_activity"] = (m.group(1) == "true") if m else None
+    obj["evidence_quote"] = ""   # 审计摘录不可靠时置空，不伪造
+    return obj, "regex_fallback"
+
+
 def score_paragraph(para_id, code, name, paragraph, retries=4):
     raw_path = os.path.join(RAW_DIR, f"{para_id}.json")
-    if os.path.exists(raw_path):  # 断点续跑
-        with open(raw_path) as f:
-            cached = json.load(f)
-        return {**cached, "para_id": para_id, "code": code, "name": name}
+    if os.path.exists(raw_path):  # 断点续跑（容错：半写/损坏缓存视为未打分）
+        try:
+            with open(raw_path) as f:
+                cached = json.load(f)
+            if cached.get("label") in ("application", "strategy", "none"):
+                return {**cached, "para_id": para_id, "code": code, "name": name}
+        except (json.JSONDecodeError, OSError, ValueError, TypeError):
+            pass
+        # 损坏缓存（进程中断留下的半写 JSON）→ 删除并重新打分
+        try:
+            os.remove(raw_path)
+        except OSError:
+            pass
     user_msg = f"【公司代码】{code}\n【公司简称】{name}\n【MD&A 段落】\n{paragraph}"
     for attempt in range(retries):
         try:
@@ -82,18 +132,19 @@ def score_paragraph(para_id, code, name, paragraph, retries=4):
                 timeout=60)
             if r.status_code == 200:
                 content = r.json()["choices"][0]["message"]["content"].strip()
-                # 剥离可能的 ```json 包裹
-                if content.startswith("```"):
-                    content = content.strip("`").lstrip("json").strip()
-                parsed = json.loads(content)
+                parsed, parse_note = _parse_model_output(content)
                 rec = {"label": parsed.get("label"), "domain": parsed.get("domain"),
                        "firm_ai_activity": parsed.get("firm_ai_activity"),
                        "evidence_quote": (parsed.get("evidence_quote") or "")[:100],
                        "investment_mention": parsed.get("investment_mention"),
                        "confidence": parsed.get("confidence"), "model": MODEL,
-                       "prompt_version": "v1"}
-                with open(raw_path, "w") as f:
+                       "prompt_version": "v1", "parse_note": parse_note}
+                # 原子写：先写 .tmp 再 rename，避免进程中断产生半写 JSON
+                # （2026-11-21 曾因此产生 2 个损坏缓存，导致断点续跑崩溃）
+                tmp_path = raw_path + ".tmp"
+                with open(tmp_path, "w") as f:
                     json.dump({**rec, "paragraph_head": paragraph[:80]}, f, ensure_ascii=False)
+                os.replace(tmp_path, raw_path)
                 with _print_lock:
                     print(f"  {para_id} {code} -> {rec['label']} ({rec['confidence']})", flush=True)
                 return {**rec, "para_id": para_id, "code": code, "name": name}
